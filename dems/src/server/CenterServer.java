@@ -5,40 +5,36 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CenterServer extends UnicastRemoteObject implements RMIInterface {
-	public HashMap<Character, ArrayList<Record>> records;
-	public String location;
+import common.EmployeeRecord;
+import common.ManagerRecord;
+import common.CenterServerInterface;
+import common.Records;
+
+public class CenterServer extends UnicastRemoteObject implements CenterServerInterface {
 	
-	public CenterServer(String location) throws RemoteException {
-		super(0);
+	public static void main(String[] args) throws RemoteException, MalformedURLException {
+		if (args.length < 1) {
+			System.out.println("missing location");
+			return;
+		}
 		
-		this.location = location;
+    	LocateRegistry.createRegistry(1099); 
+    	new CenterServer(args[0]);
 	}
+
+	private static final long serialVersionUID = 1L;
 	
-	public String getName() {
-		return "//localhost/" + this.location;
-	}
+	public Records<EmployeeRecord> employees;
+	public Records<ManagerRecord> managers;
 	
-	public void bind() throws MalformedURLException, RemoteException {
-    	Naming.rebind(this.getName(), this);
+	public CenterServer(String location) throws MalformedURLException, RemoteException {
+		super(0);
+		Naming.rebind("//localhost/" + location, this);
 	}
 	
 	public String getRecordCounts() {
 		return "test count";
-	}
-
-	public static void main(String[] args) {
-	    try {
-	    	LocateRegistry.createRegistry(1099); 
-	    	new CenterServer("CA").bind();
-		    new CenterServer("US").bind();
-		    new CenterServer("UK").bind();
-	    } catch (Exception e) {
-	    	System.out.println(e);
-	    }
 	}
 
 }
