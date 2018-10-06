@@ -1,10 +1,12 @@
 package common;
 
 public class EmployeeRecord extends Record {
+	protected String type = "ER";
+	
 	public String projectID;
 
-	public EmployeeRecord(String firstName, String lastName, String id, String mailID, String projectID) {
-		super(firstName, lastName, "ER" + id, mailID);
+	public EmployeeRecord(String firstName, String lastName, int employeeID, String mailID, String projectID) {
+		super(firstName, lastName, employeeID, mailID);
 		
 		this.projectID = projectID;
 	}
