@@ -1,10 +1,10 @@
 package server;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+import common.Location;
 import common.Logger;
 
 public class Server {
@@ -13,11 +13,11 @@ public class Server {
 
 	public static void main(String[] args) throws IOException {
 		if (args.length < 1) {
-			Logger.log("missing location");
+			Logger.log("missing location argument");
 			return;
 		}
-		String location = args[0];
-		// TODO check location is valid.
+		Location location = new Location(args[0]);
+		Logger.log("using location %s", location);
 		
 		Logger.file("server-" + location);
 		

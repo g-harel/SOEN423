@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import common.EmployeeRecord;
+import common.Location;
 import common.Logger;
 import common.ManagerRecord;
 import common.Project;
@@ -18,11 +18,10 @@ import common.CenterServerInterface;
 
 public class CenterServer extends UnicastRemoteObject implements CenterServerInterface {
 
-	private static final long serialVersionUID = 1L;
 	private HashMap<Character, ArrayList<Record>> records;
-	private String location;
+	private Location location;
 
-	public CenterServer(String location) throws IOException {
+	public CenterServer(Location location) throws IOException {
 		super(0);
 
 		this.records = new HashMap<Character, ArrayList<Record>>();
@@ -47,7 +46,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	// CenterServerInterface implementation
 
 	public Boolean createMRecord(String firstName, String lastName, int employeeID, String mailID, Project project) throws RemoteException {
-		ManagerRecord record = new ManagerRecord(firstName, lastName, employeeID, mailID, project, this.location);
+		ManagerRecord record = new ManagerRecord(firstName, lastName, employeeID, mailID, project, this.location.toString());
 		Character index = lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;
 		if (!this.records.containsKey(lastName.charAt(0))) {
@@ -61,7 +60,8 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	}
 
 	public Boolean createERecord(String firstName, String lastName, int employeeID, String mailID, String projectID, String location) throws RemoteException {
-		// TODO validate / do something with location
+		new Location(location);
+		// TODO do something with location
 		EmployeeRecord record = new EmployeeRecord(firstName, lastName, employeeID, mailID, projectID);
 		Character index = lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;
