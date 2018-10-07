@@ -28,12 +28,8 @@ public class Client {
 		
 		ManagerClient client = new ManagerClient(location);
 		
-		client.remote.getRecordCounts();
-		
-		client.remote.createMRecord("Alex", "Smith", 54321, "alexsmith@example.com", new Project("P0000", "Jane Lee", "Project 0000"));
-		client.remote.createERecord("John", "Doe", 12345, "johndoe@example.com", "P0000", "US");
-		client.remote.editRecord("ER00000", "projectName", "Project 0000");
-
-		client.remote.getRecordCounts();
+		while (true) {			
+			client.listen();
+		}
 	}
 }
