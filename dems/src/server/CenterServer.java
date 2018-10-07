@@ -54,8 +54,8 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	}
 
 	private Record getRecord(String recordID) {
-		for (Map.Entry<Character, ArrayList<Record>> records : this.records.entrySet()) {
-			for (Record record : records.getValue()) {
+		for (ArrayList<Record> records : this.records.values()) {
+			for (Record record : records) {
 				if (record.recordID == recordID) {
 					return record;
 				}
@@ -67,17 +67,17 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	// CenterServerInterface implementation
 
 	public synchronized Boolean createMRecord(String firstName, String lastName, int employeeID, String mailID, Project project) throws IOException {
-		ManagerRecord record = new ManagerRecord(firstName, lastName, employeeID, mailID, project, this.location.toString());
+		ManagerRecord record = new ManagerRecord(firstName, lastName, employeeID, mailID, project, this.location);
 		Character index = lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;
-		if (!this.records.containsKey(lastName.charAt(0))) {
+		if (!this.records.containsKey(index)) {
 			records = new ArrayList<Record>();
 			this.records.put(index, records);
 		} else {
 			records = this.records.get(index);
 		}
 		records.add(record);
-		Logger.log("manager record created for \"%s %s\"", firstName, lastName);
+		Logger.log("manager record with id \"%s\" created for \"%s %s\"", record.recordID, firstName, lastName);
 		return true;
 	}
 
@@ -97,19 +97,23 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 		EmployeeRecord record = new EmployeeRecord(firstName, lastName, employeeID, mailID, projectID);
 		Character index = lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;
-		if (!this.records.containsKey(lastName.charAt(0))) {
+		if (!this.records.containsKey(index)) {
 			records = new ArrayList<Record>();
 			this.records.put(index, records);
 		} else {
 			records = this.records.get(index);
 		}
 		records.add(record);
-		Logger.log("employee record created for \"%s %s\"", firstName, lastName);
+		Logger.log("employee record with id \"%s\" created for \"%s %s\"", record.recordID, firstName, lastName);
 		return true;
 	}
 	
 	public synchronized String getSelfRecordCounts() {
-		return String.format("%s %d", this.location, this.records.size());
+		int size = 0;
+		for (ArrayList<Record> records : this.records.values()) {
+			size += records.size();
+		}
+		return String.format("%s %d", this.location, size);
 	}
 
 	public synchronized String getRecordCounts() throws IOException {
@@ -124,12 +128,12 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	public synchronized String editRecord(String recordID, String fieldName, String newValue) throws IOException {
 		Record record = this.getRecord(recordID);
 		if (record == null) {
-			return Logger.log("ERROR: no record with that ID found");
+			return Logger.log("error editing record, no record with id \"%s\" found", recordID);
 		}
 
 		if (fieldName == "mailID") {
 			if (newValue == null || newValue.equals("")) {
-				return Logger.log("ERROR: empty mailID");
+				return Logger.log("error editing record, empty mailID");
 			}
 			record.mailID = newValue;
 			return Logger.log("updated mailID");
@@ -144,10 +148,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 
 		if (recordID.substring(0, 2) == "MR") {
 			if (fieldName == "location") {
-				if (newValue.length() == 2 && "CA, US, UK".indexOf(newValue) != -1) {
-					return Logger.log("ERROR: invalid location");
-				}
-				((ManagerRecord)record).location = newValue;
+				((ManagerRecord)record).location = new Location(newValue);
 				return Logger.log("updated location");
 			}
 			if (fieldName == "projectInfo") {
@@ -155,7 +156,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 			}
 		}
 
-		return Logger.log("ERROR: operation not found");
+		return Logger.log("error editing record, field \"%s\" on \"%s\" not found", fieldName, recordID);
 	}
 
 }

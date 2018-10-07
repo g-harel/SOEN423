@@ -10,10 +10,11 @@ import common.Logger;
 
 public class ManagerClient {
 
-	public CenterServerInterface server;
+	public CenterServerInterface remote;
 
 	public ManagerClient(Location location) throws NotBoundException, IOException {
-		this.server = (CenterServerInterface)Naming.lookup(location.serverName());
+		this.remote = new LoggingClient((CenterServerInterface)Naming.lookup(location.serverName()));
+		
 		Logger.log("found \"%s\" server", location);
 	}
 
