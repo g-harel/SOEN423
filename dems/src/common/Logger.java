@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class Logger {
 	
@@ -16,13 +17,14 @@ public class Logger {
 	}
 	
 	public static String log(String format, Object... args) throws IOException {
-		String str = String.format(format + "\n", args);
+		String str = String.format(format, args);
+		String msg = String.format("%tY/%<tb/%<te %<tT - %s%n", LocalDateTime.now(), str);
 		
 		if (Logger.writer != null) {
-			Logger.writer.write(str);
+			Logger.writer.write(msg);
 			Logger.writer.flush();
 		}
-		System.out.print(str);
+		System.out.print(msg);
 		
 		return str;
 	}
