@@ -2,12 +2,14 @@ package common;
 
 public class Location {
 	
-	private static String[] validLocations = new String[]{"CA", "US", "UK"};
+	private static String[] validLocations = new String[] {"CA", "US", "UK"};
 	
-	public static String[] list() {
-		String[] copy = new String[Location.validLocations.length];
-		System.arraycopy(Location.validLocations, 0, copy, 0, Location.validLocations.length);
-		return copy;
+	public static Location[] list() {
+		Location[] locations = new Location[Location.validLocations.length];
+		for (int i = 0; i < Location.validLocations.length; i++) {
+			locations[i] = new Location(Location.validLocations[i]);
+		}
+		return locations;
 	}
 	
 	//
@@ -27,6 +29,14 @@ public class Location {
 			String.join(", ", Location.validLocations),
 			location
 		));
+	}
+	
+	public Boolean equals(Location l) {
+		return this.value.equals(l.value);
+	}
+	
+	public String serverName() {
+		return "rmi://localhost/" + this.value;
 	}
 	
 	public String toString() {

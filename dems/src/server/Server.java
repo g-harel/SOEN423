@@ -17,13 +17,14 @@ public class Server {
 			return;
 		}
 		Location location = new Location(args[0]);
-		Logger.log("using location %s", location);
 		
 		Logger.file("server-" + location);
 		
+		Logger.log("starting as \"%s\" server", location);
+		
 		try {
 			LocateRegistry.createRegistry(Server.port);
-			Logger.log("created registry on :%s", Server.port);
+			Logger.log("created registry on \":%s\"", Server.port);
 		} catch (RemoteException e) {			
 			Logger.log("registry already exists");
 		}
