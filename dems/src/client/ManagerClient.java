@@ -16,17 +16,17 @@ public class ManagerClient {
 
 	public ManagerClient(Location location) throws NotBoundException, IOException {
 		this.remote = new LoggingClient((CenterServerInterface)Naming.lookup(location.serverName()));
-		
+
 		Logger.log("found \"%s\" server", location);
 	}
-	
+
 	public void listen() throws IOException {
 		Scanner scanner = new Scanner (System.in);
 		System.out.println("enter a command:");
 		String command = scanner.nextLine();
-		
+
 		Logger.log("started command \"%s\"", command);
-		
+
 		if (command.equals("help")) {
 			System.out.println("  help:         print command descriptions");
 			System.out.println("  count:        prints the number of stored records in all running servers");
@@ -55,7 +55,7 @@ public class ManagerClient {
 			Logger.log("exiting");
 			System.exit(0);
 		} else {
-			Logger.log("command \"%s\" is not recognized", command);
+			Logger.log("command \"%s\" is not recognized (use \"help\" for list of available commands)", command);
 		}
 	}
 

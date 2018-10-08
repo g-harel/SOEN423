@@ -22,7 +22,7 @@ public class Client {
 		
 		Location location = new Location(managerID.substring(0, 2));
 		
-		Logger.file("client-" + location);
+		Logger.file("client-" + managerID);
 		
 		Logger.log("connecting with manager id \"%s\" to location \"%s\"", managerID, location);
 		
