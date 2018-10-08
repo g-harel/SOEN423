@@ -32,10 +32,10 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 
 		Naming.rebind(location.serverName(), this);
 		Logger.log("server bound to name: \"%s\"", location.serverName());
-		
+
 		this.tryToConnect();
 	}
-	
+
 	private synchronized void tryToConnect() throws IOException {
 		for (Location l : Location.list()) {
 			if (this.location.equals(l)) {
@@ -56,7 +56,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 	private Record getRecord(String recordID) {
 		for (ArrayList<Record> records : this.records.values()) {
 			for (Record record : records) {
-				if (record.recordID == recordID) {
+				if (record.recordID.equals(recordID)) {
 					return record;
 				}
 			}
@@ -107,7 +107,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 		Logger.log("employee record with id \"%s\" created for \"%s %s\"", record.recordID, firstName, lastName);
 		return true;
 	}
-	
+
 	public synchronized String getSelfRecordCounts() {
 		int size = 0;
 		for (ArrayList<Record> records : this.records.values()) {
@@ -131,7 +131,7 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 			return Logger.log("error editing record, no record with id \"%s\" found", recordID);
 		}
 
-		if (fieldName == "mailID") {
+		if (fieldName.equals("mailID")) {
 			if (newValue == null || newValue.equals("")) {
 				return Logger.log("error editing record, empty mailID");
 			}
@@ -139,24 +139,29 @@ public class CenterServer extends UnicastRemoteObject implements CenterServerInt
 			return Logger.log("updated mailID");
 		}
 
-		if (recordID.substring(0, 2) == "ER") {
-			if (fieldName == "projectID") {
+		if (recordID.substring(0, 2).equals("ER")) {
+			if (fieldName.equals("projectID")) {
 				((EmployeeRecord)record).projectID = newValue;
 				return Logger.log("updated projectID");
 			}
 		}
 
-		if (recordID.substring(0, 2) == "MR") {
-			if (fieldName == "location") {
+		if (recordID.substring(0, 2).equals("MR")) {
+			if (fieldName.equals("location")) {
 				((ManagerRecord)record).location = new Location(newValue);
 				return Logger.log("updated location");
 			}
-			if (fieldName == "projectInfo") {
-				// TODO
+			if (fieldName.equals("projectInfo.clientName")) {
+				((ManagerRecord)record).projectInfo.clientName = newValue;
+				return Logger.log("updated project client's name");
+			}
+			if (fieldName.equals("projectInfo.projectName")) {
+				((ManagerRecord)record).projectInfo.projectName = newValue;
+				return Logger.log("updated project name");
 			}
 		}
 
-		return Logger.log("error editing record, field \"%s\" on \"%s\" not found", fieldName, recordID);
+		return Logger.log("error editing record, no editable field \"%s\" on record with id \"%s\"", fieldName, recordID);
 	}
 
 }

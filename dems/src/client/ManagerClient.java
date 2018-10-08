@@ -48,7 +48,7 @@ public class ManagerClient {
 		} else if (command.equals("empl-uk")) {
 			this.remote.createERecord("John", "Doe", 12345, "johndoe@example.com", "P0000", "UK");
 		} else if (command.equals("edit-mngr")) {
-			this.remote.editRecord("MR00000", "project_clientName", "Charles David");
+			this.remote.editRecord("MR00000", "projectInfo.clientName", "Charles David");
 		} else if (command.equals("edit-empl")) {
 			this.remote.editRecord("ER00000", "mailID", "noreply@example.com");
 		} else if (command.equals("exit")) {
