@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PORT=1051
+IDL=Hello
+
+function log {
+    echo -e "\n >> \e[1;35m$1\e[0m\n"
+}
+
+clear
+
+log "compiling idl interface"
+idlj -fall -td src src/$IDL.idl
+
+log "starting naming service"
+pkill orbd
+sleep 1
+orbd -ORBInitialPort $PORT&
+
+log "compiling source"
+javac src/**/*.java
+
+cd src
+
+log "starting server"
+java HelloServer -ORBInitialPort $PORT&
+
+log "starting client"
+java HelloClient -ORBInitialPort $PORT
