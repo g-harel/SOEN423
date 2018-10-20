@@ -1,29 +1,51 @@
 #!/bin/bash
 
-PORT=1051
-IDL=Hello
+clear
 
-function log {
+ORB_PORT=1051
+
+IDL_PATH=src/Hello.idl
+BIN_PATH=$(pwd)/bin
+
+CLIENT_CLASS=HelloClient
+SERVER_CLASS=HelloServer
+
+function printStep {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
 }
 
-clear
+function sketchyWait {
+    sleep 0.314159
+}
 
-log "compiling idl interface"
-idlj -fall -td src src/$IDL.idl
+printStep "compiling idl interface"
+idlj -fall -td src $IDL_PATH
 
-log "starting naming service"
+printStep "compiling source"
+mkdir -p bin
+javac -d $BIN_PATH src/*.java src/**/*.java
+
+if [[ $1 == "build" ]]; then
+    echo
+    exit 0
+fi
+
+printStep "starting naming service"
 pkill orbd
-sleep 1
-orbd -ORBInitialPort $PORT&
+sketchyWait
+orbd -ORBInitialPort $ORB_PORT&
+sketchyWait
 
-log "compiling source"
-javac src/**/*.java
+cd $BIN_PATH
 
-cd src
+printStep "starting server"
+java $SERVER_CLASS -ORBInitialPort $ORB_PORT&
 
-log "starting server"
-java HelloServer -ORBInitialPort $PORT&
+sketchyWait
 
-log "starting client"
-java HelloClient -ORBInitialPort $PORT
+printStep "starting client"
+java $CLIENT_CLASS -ORBInitialPort $ORB_PORT
+
+sketchyWait
+
+kill $(jobs -p)
