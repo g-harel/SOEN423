@@ -10,6 +10,14 @@ public class RecordStore {
 		this.records = new HashMap<Character, ArrayList<Record>>();
 	}
 	
+	public int count() {
+		int size = 0;
+		for (ArrayList<Record> records : this.records.values()) {
+			size += records.size();
+		}
+		return size;
+	}
+	
 	public Record read(String recordID) {
 		for (ArrayList<Record> records : this.records.values()) {
 			for (Record record : records) {

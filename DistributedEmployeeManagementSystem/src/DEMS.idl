@@ -2,7 +2,7 @@ module DEMS {
     interface Location {
         readonly attribute string address;
 
-        boolean createMRecord(
+        string createMRecord(
             in string managerID,
             in string firstName,
             in string lastName,
@@ -12,7 +12,7 @@ module DEMS {
             in string location
         );
 
-        boolean createERecord(
+        string createERecord(
             in string managerID,
             in string firstName,
             in string lastName,
@@ -32,7 +32,7 @@ module DEMS {
             in string newValue
         );
 
-        boolean transferRecord(
+        string transferRecord(
             in string managerID,
             in string recordID,
             in string remoteCenterServerName
