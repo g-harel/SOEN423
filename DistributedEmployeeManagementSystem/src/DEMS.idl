@@ -1,0 +1,43 @@
+module DEMS {
+    interface Location {
+        readonly attribute string address;
+
+        boolean createMRecord(
+            in string managerID,
+            in string firstName,
+            in string lastName,
+            in long employeeID,
+            in string mailID,
+            in string project,
+            in string location
+        );
+
+        boolean createERecord(
+            in string managerID,
+            in string firstName,
+            in string lastName,
+            in long employeeID,
+            in string mailID,
+            in string projectID
+        );
+
+        string getRecordCounts(
+            in string managerID
+        );
+
+        string editRecord(
+            in string managerID,
+            in string recordID,
+            in string fieldName,
+            in string newValue
+        );
+
+        boolean transferRecord(
+            in string managerID,
+            in string recordID,
+            in string remoteCenterServerName
+        );
+
+        oneway void shutdown();
+    };
+};

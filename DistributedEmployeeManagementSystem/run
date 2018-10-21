@@ -2,33 +2,46 @@
 
 clear
 
+CMD=$1
+
 ORB_PORT=1051
 
-IDL_PATH=src/Hello.idl
+SRC_PATH=$(pwd)/src
 BIN_PATH=$(pwd)/bin
 
-CLIENT_CLASS=HelloClient
-SERVER_CLASS=HelloServer
+IDL_NAME=DEMS
+CLIENT_CLASS=Client
+SERVER_CLASS=Server
 
 function printStep {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
+}
+
+function cmdDone {
+    if [[ $CMD == "$1" ]]; then
+        exit 0
+    fi
 }
 
 function sketchyWait {
     sleep 0.314159
 }
 
+function runServer {
+    java $SERVER_CLASS -ORBInitialPort $ORB_PORT "$@" &
+}
+
 printStep "compiling idl interface"
-idlj -fall -td src $IDL_PATH
+rm -rf $SRC_PATH/$IDL_NAME
+idlj -fall -td $SRC_PATH $SRC_PATH/$IDL_NAME.idl
+
+cmdDone "gen"
 
 printStep "compiling source"
 mkdir -p bin
-javac -d $BIN_PATH src/*.java src/**/*.java
+javac -d $BIN_PATH $SRC_PATH/*.java $SRC_PATH/**/*.java
 
-if [[ $1 == "build" ]]; then
-    echo
-    exit 0
-fi
+cmdDone "build"
 
 printStep "starting naming service"
 pkill orbd
@@ -39,7 +52,7 @@ sketchyWait
 cd $BIN_PATH
 
 printStep "starting server"
-java $SERVER_CLASS -ORBInitialPort $ORB_PORT&
+runServer
 
 sketchyWait
 

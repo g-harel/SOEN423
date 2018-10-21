@@ -3,7 +3,6 @@ package common;
 import java.util.HashMap;
 
 public class Project extends HashMap<String, String> {
-	
 	public String projectID;
 	public String clientName;
 	public String projectName;

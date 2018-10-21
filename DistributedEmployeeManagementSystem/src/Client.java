@@ -1,11 +1,9 @@
-import HelloApp.*;
+import DEMS.*;
 
 import org.omg.CosNaming.*;
 import org.omg.CORBA.*;
 
-public class HelloClient {
-    static Hello helloImpl;
-
+public class Client {
     public static void main(String args[]) throws Exception {
         ORB orb = ORB.init(args, null);
 
@@ -15,8 +13,6 @@ public class HelloClient {
 
         // Create implementation from named reference.
         String name = "Hello";
-        helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
-
-        System.out.println(helloImpl.sayHello());
+        Location locationImpl = LocationHelper.narrow(ncRef.resolve_str(name));
     }
 }

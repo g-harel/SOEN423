@@ -1,7 +1,6 @@
 package common;
 
 public class Record {
-	
 	public String recordID;
 	public String firstName;
 	public String lastName;

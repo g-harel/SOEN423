@@ -1,30 +1,12 @@
-import HelloApp.*;
+import DEMS.*;
+import server.LocationImpl;
 
 import org.omg.CosNaming.*;
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 import org.omg.PortableServer.POA;
 
-class HelloImpl extends HelloPOA {
-    private ORB orb;
-
-    public void setORB(ORB orb_val) {
-        orb = orb_val;
-    }
-
-    // implement sayHello() method
-    public String sayHello() {
-        return "\nHello world !!\n";
-    }
-
-    // implement shutdown() method
-    public void shutdown() {
-        orb.shutdown(false);
-    }
-}
-
-
-public class HelloServer {
+public class Server {
     public static void main(String args[]) throws Exception {
         ORB orb = ORB.init(args, null);
 
@@ -33,19 +15,19 @@ public class HelloServer {
         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
         // Create implementation instance.
-        HelloImpl helloImpl = new HelloImpl();
-        helloImpl.setORB(orb);
+        LocationImpl locationImpl = new LocationImpl();
+        locationImpl.setORB(orb);
 
         // Create reference to implementation.
         POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
         rootPOA.the_POAManager().activate();
-        org.omg.CORBA.Object ref = rootPOA.servant_to_reference(helloImpl);
-        Hello href = HelloHelper.narrow(ref);
+        org.omg.CORBA.Object ref = rootPOA.servant_to_reference(locationImpl);
+        Location sref = LocationHelper.narrow(ref);
 
         // Bind reference to a name in naming service.
         String name = "Hello";
         NameComponent path[] = ncRef.to_name(name);
-        ncRef.rebind(path, href);
+        ncRef.rebind(path, sref);
 
         System.out.println("HelloServer ready and waiting ...");
 
