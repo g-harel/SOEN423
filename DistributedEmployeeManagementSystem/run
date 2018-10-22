@@ -4,6 +4,11 @@ clear
 
 CMD=$1
 
+if [[ $CMD == "" ]]; then
+	echo -e "\nno command specified\n"
+	exit 1
+fi
+
 ORB_PORT=1051
 
 SRC_PATH=$(pwd)/src
@@ -19,6 +24,7 @@ function printStep {
 
 function cmdDone {
     if [[ $CMD == "$1" ]]; then
+    	echo
         exit 0
     fi
 }
@@ -28,7 +34,8 @@ function sketchyWait {
 }
 
 function runServer {
-    java $SERVER_CLASS -ORBInitialPort $ORB_PORT "$@" &
+	echo "starting server:" "$@"
+    java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT 2>&1 >/dev/null &
 }
 
 printStep "compiling idl interface"
@@ -46,19 +53,22 @@ cmdDone "build"
 printStep "starting naming service"
 pkill orbd
 sketchyWait
-orbd -ORBInitialPort $ORB_PORT&
+orbd -ORBInitialPort $ORB_PORT &
 sketchyWait
 
 cd $BIN_PATH
 
 printStep "starting server"
-runServer
+runServer "CA"
 
 sketchyWait
+
+cmdDone "server"
 
 printStep "starting client"
-java $CLIENT_CLASS -ORBInitialPort $ORB_PORT
+java $CLIENT_CLASS -ORBInitialPort $ORB_PORT 2>&1 | grep -vP "^\\s+at" | grep -vP "^\\s+\\.{3}"
 
 sketchyWait
+echo
 
 kill $(jobs -p)
