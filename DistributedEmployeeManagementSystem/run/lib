@@ -1,0 +1,65 @@
+#!/bin/bash
+
+ORB_PORT=1051
+
+SRC_PATH=$(pwd)/src
+BIN_PATH=$(pwd)/bin
+LOG_PATH=$BIN_PATH/log
+
+IDL_NAME=DEMS
+CLIENT_CLASS=Client
+SERVER_CLASS=Server
+
+clear
+rm -rf $LOG_PATH
+
+function step {
+    echo -e "\n >> \e[1;35m$1\e[0m\n"
+}
+
+function sketchy_wait {
+    sleep 0.314159
+}
+
+function compile_idl {
+    rm -rf $SRC_PATH/$IDL_NAME
+    idlj -fall -td $SRC_PATH $SRC_PATH/$IDL_NAME.idl
+}
+
+function compile_java {
+    mkdir -p bin
+    javac -d $BIN_PATH $SRC_PATH/*.java $SRC_PATH/**/*.java
+}
+
+function start_orbd {
+    orbd -ORBInitialPort $ORB_PORT &
+    sketchy_wait
+}
+
+function run_server {
+    pushd $BIN_PATH > /dev/null
+    echo "starting server:" "$@"
+    java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT 2>&1 >/dev/null &
+    sketchy_wait
+    popd > /dev/null
+}
+
+function run_client {
+    pushd $BIN_PATH > /dev/null
+    echo "starting client:" "$@"
+    java $CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT 2>&1 | grep -vP "^\\s+at" | grep -vP "^\\s+\\.{3}"
+    sketchy_wait
+    popd > /dev/null
+}
+
+function cleanup {
+    step "cleaning up"
+    sketchy_wait
+    pkill orbd
+    background_jobs=$(jobs -p)
+    if [[ $background_jobs != "" ]]; then
+        kill $background_jobs
+    fi
+}
+
+trap cleanup EXIT

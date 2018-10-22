@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source run/lib
+source run/build
+
+step "starting naming service"
+start_orbd
+
+step "starting servers"
+run_server "CA"
+run_server "US"
+run_server "UK"

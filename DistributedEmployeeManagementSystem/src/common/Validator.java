@@ -12,6 +12,10 @@ public abstract class Validator {
 	public static boolean isEmployeeRecordID(String str) {
 		return str.matches("^ER\\d{5}$");
 	}
+	
+	public static boolean isManagerID(String str) {
+		return str.matches("^(CA|US|UK)\\d{5}$");
+	}
 
 	public static boolean isEmployeeID(int num) {
 		return num > 0;

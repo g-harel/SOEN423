@@ -41,11 +41,10 @@ public class Server {
         Location sref = LocationHelper.narrow(ref);
 
         // Bind reference to a name in naming service.
-        String name = "Hello";
-        NameComponent path[] = ncRef.to_name(name);
+        NameComponent path[] = ncRef.to_name(locationCode);
         ncRef.rebind(path, sref);
 
-        System.out.println(locationCode + " server ready");
+        Logger.log("%s server ready", locationCode);
 
         orb.run();
     }

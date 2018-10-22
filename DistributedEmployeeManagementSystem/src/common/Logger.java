@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 
 public class Logger {
 	private static BufferedWriter writer;
+	private static String logPath = "./log/";
 	
 	public static void file(String name) {
-		new File("./log").mkdirs();
-		String filename = "./log/" + name + ".log";
-		try {			
+		new File(logPath).mkdirs();
+		String filename = logPath + name + ".log";
+		try {
 			Logger.writer = new BufferedWriter(new FileWriter(filename));
 		} catch (IOException e) {
 			System.out.println("could not open log file: " + e);

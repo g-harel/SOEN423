@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source run/lib
+
+source run/servers
+
+step "starting client"
+run_client "CA00000"

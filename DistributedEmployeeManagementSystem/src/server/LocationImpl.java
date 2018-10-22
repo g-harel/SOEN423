@@ -1,9 +1,5 @@
 package server;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.omg.CORBA.ORB;
 
 import DEMS.LocationPOA;
@@ -16,7 +12,6 @@ import common.RecordStore;
 import common.Validator;
 
 public class LocationImpl extends LocationPOA {
-	// TODO validate location
     private ORB orb;
 
     public void setORB(ORB orb) {
