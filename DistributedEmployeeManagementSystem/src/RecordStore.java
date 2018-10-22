@@ -1,15 +1,13 @@
-package common;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RecordStore {
 	private HashMap<Character, ArrayList<Record>> records;
-	
+
 	public RecordStore() {
 		this.records = new HashMap<Character, ArrayList<Record>>();
 	}
-	
+
 	public int count() {
 		int size = 0;
 		for (ArrayList<Record> records : this.records.values()) {
@@ -17,7 +15,7 @@ public class RecordStore {
 		}
 		return size;
 	}
-	
+
 	public Record read(String recordID) {
 		for (ArrayList<Record> records : this.records.values()) {
 			for (Record record : records) {
@@ -28,7 +26,7 @@ public class RecordStore {
 		}
 		return null;
 	}
-	
+
 	public void write(Record record) {
 		Character index = record.lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;

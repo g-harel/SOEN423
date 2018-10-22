@@ -1,15 +1,6 @@
-package server;
-
 import org.omg.CORBA.ORB;
 
 import DEMS.LocationPOA;
-import common.EmployeeRecord;
-import common.Logger;
-import common.ManagerRecord;
-import common.Project;
-import common.Record;
-import common.RecordStore;
-import common.Validator;
 
 public class LocationImpl extends LocationPOA {
     private ORB orb;

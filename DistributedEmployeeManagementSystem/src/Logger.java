@@ -1,5 +1,3 @@
-package common;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,7 +7,7 @@ import java.time.LocalDateTime;
 public class Logger {
 	private static BufferedWriter writer;
 	private static String logPath = "./log/";
-	
+
 	public static void writeTo(String name) {
 		new File(logPath).mkdirs();
 		String filename = logPath + name + ".log";
@@ -19,11 +17,11 @@ public class Logger {
 			System.err.println("could not open log file: " + e);
 		}
 	}
-	
+
 	public static String log(String format, Object... args) {
 		String str = String.format(format, args);
 		String msg = String.format("%tY/%<tb/%<te %<tT - %s%n", LocalDateTime.now(), str);
-		
+
 		if (Logger.writer != null) {
 			try {
 				Logger.writer.write(msg);
@@ -35,11 +33,11 @@ public class Logger {
 		System.out.print(msg);
 		return str;
 	}
-	
+
 	public static String err(String format, Object... args) {
 		String str = String.format(format, args);
 		String msg = String.format("%tY/%<tb/%<te %<tT - ERROR: %s%n", LocalDateTime.now(), str);
-		
+
 		if (Logger.writer != null) {
 			try {
 				Logger.writer.write(msg);
