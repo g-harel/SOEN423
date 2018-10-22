@@ -12,18 +12,18 @@ import org.omg.PortableServer.POA;
 public class Server {
     public static void main(String args[]) throws Exception {
     	if (args.length < 1) {
-			Logger.log("error, no location code provided");
-			System.exit(1);
-    	}
-    	
-    	String locationCode = args[0];
-    	if (!Validator.isLocationCode(locationCode)) {
-			Logger.log("error, invalid location code \"%s\"", locationCode);
+			Logger.err("no location code provided");
 			System.exit(1);
     	}
 
-		Logger.file("server-" + locationCode);
-    	
+    	String locationCode = args[0];
+    	if (!Validator.isLocationCode(locationCode)) {
+			Logger.err("invalid location code \"%s\"", locationCode);
+			System.exit(1);
+    	}
+
+		Logger.writeTo("server-" + locationCode);
+
         ORB orb = ORB.init(args, null);
 
         // Get reference to naming service.

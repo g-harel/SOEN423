@@ -1,8 +1,17 @@
 #!/bin/bash
 
-source run/lib
+source lib
 
 source run/servers
 
-step "starting client"
-run_client "CA00000"
+step "running clients"
+
+run_client "CA00000" << EOF >/dev/null &
+John Doe
+EOF
+
+run_client "CA00001" << EOF >/dev/null &
+Steve Smith
+EOF
+
+sketchy_wait

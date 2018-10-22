@@ -27,29 +27,26 @@ function compile_idl {
 }
 
 function compile_java {
-    mkdir -p bin
+    mkdir -p $BIN_PATH
     javac -d $BIN_PATH $SRC_PATH/*.java $SRC_PATH/**/*.java
 }
 
 function start_orbd {
-    orbd -ORBInitialPort $ORB_PORT &
-    sketchy_wait
+    orbd -ORBInitialPort $ORB_PORT
 }
 
 function run_server {
-    pushd $BIN_PATH > /dev/null
+    pushd $BIN_PATH >/dev/null
     echo "starting server:" "$@"
-    java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT 2>&1 >/dev/null &
-    sketchy_wait
-    popd > /dev/null
+    java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
+    popd >/dev/null
 }
 
 function run_client {
-    pushd $BIN_PATH > /dev/null
+    pushd $BIN_PATH >/dev/null
     echo "starting client:" "$@"
-    java $CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT 2>&1 | grep -vP "^\\s+at" | grep -vP "^\\s+\\.{3}"
-    sketchy_wait
-    popd > /dev/null
+    java $CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
+    popd >/dev/null
 }
 
 function cleanup {
@@ -58,7 +55,7 @@ function cleanup {
     pkill orbd
     background_jobs=$(jobs -p)
     if [[ $background_jobs != "" ]]; then
-        kill $background_jobs
+        kill $background_jobs &>/dev/null
     fi
 }
 

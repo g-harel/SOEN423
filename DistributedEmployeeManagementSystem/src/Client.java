@@ -1,25 +1,29 @@
 import DEMS.*;
+import client.Prompt;
 import common.Logger;
 import common.Validator;
 
 import org.omg.CosNaming.*;
+
 import org.omg.CORBA.*;
 
 public class Client {
     public static void main(String args[]) throws Exception {
-    	if (args.length < 1) {
-			Logger.log("error, no manager ID provided");
-			System.exit(1);
-    	}
-    	
-    	String managerID = args[0];
-    	if (!Validator.isManagerID(managerID)) {
-			Logger.log("error, invalid manager ID \"%s\"", managerID);
+    	if (args.length < 1 || args[0].equals("")) {
+			Logger.err("no manager ID provided");
 			System.exit(1);
     	}
 
-		Logger.file("client-" + managerID);
-    	
+    	String managerID = args[0];
+    	if (!Validator.isManagerID(managerID)) {
+			Logger.err("invalid manager ID \"%s\"", managerID);
+			System.exit(1);
+    	}
+
+		Logger.writeTo("client-" + managerID);
+
+		Prompt.forValue("name");
+
         ORB orb = ORB.init(args, null);
 
         // Get reference to naming service.
@@ -29,7 +33,7 @@ public class Client {
         // Create implementation from named reference.
     	String locationCode = managerID.substring(0, 2);
         Location locationImpl = LocationHelper.narrow(ncRef.resolve_str(locationCode));
-        
+
         Logger.log(locationImpl.address());
     }
 }

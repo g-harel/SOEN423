@@ -38,30 +38,30 @@ public class LocationImpl extends LocationPOA {
 
 	public synchronized String createMRecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String project, String location) {
 		if (!Validator.isFirstName(firstName)) {
-			return Logger.log("[%s] error creating manager record, invalid first name \"%s\"", managerID, firstName);
+			return Logger.err("[%s] invalid manager first name \"%s\"", managerID, firstName);
 		}
 		if (!Validator.isLastName(lastName)) {
-			return Logger.log("[%s] error creating manager record, invalid last name \"%s\"", managerID, lastName);
+			return Logger.err("[%s] invalid manager last name \"%s\"", managerID, lastName);
 		}
 		if (!Validator.isEmployeeID(employeeID)) {
-			return Logger.log("[%s] error creating manager record, invalid employee ID \"%d\"", managerID, employeeID);
+			return Logger.err("[%s] invalid manager employee ID \"%d\"", managerID, employeeID);
 		}
 		if (!Validator.isEmail(mailID)) {
-			return Logger.log("[%s] error creating manager record, invalid mail ID \"%s\"", managerID, mailID);
+			return Logger.err("[%s] invalid manager mail ID \"%s\"", managerID, mailID);
 		}
 		if (!Validator.isLocationCode(location)) {
-			return Logger.log("[%s] error creating manager record, invalid location code \"%s\"", managerID, location);
+			return Logger.err("[%s] invalid manager location code \"%s\"", managerID, location);
 		}
 
 		Project p = new Project(project);
 		if (!Validator.isProjectID(p.projectID)) {
-			return Logger.log("[%s] error creating manager record, invalid project ID \"%s\"", managerID, p.projectID);
+			return Logger.err("[%s] invalid manager project ID \"%s\"", managerID, p.projectID);
 		}
 		if (!Validator.isClientName(p.clientName)) {
-			return Logger.log("[%s] error creating manager record, invalid client name \"%s\"", managerID, p.clientName);
+			return Logger.err("[%s] invalid manager client name \"%s\"", managerID, p.clientName);
 		}
 		if (!Validator.isProjectName(p.projectName)) {
-			return Logger.log("[%s] error creating manager record, invalid project name \"%s\"", managerID, p.projectName);
+			return Logger.err("[%s] invalid manager project name \"%s\"", managerID, p.projectName);
 		}
 
 		ManagerRecord record = new ManagerRecord();
@@ -79,19 +79,19 @@ public class LocationImpl extends LocationPOA {
 
 	public synchronized String createERecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String projectID) {
 		if (!Validator.isFirstName(firstName)) {
-			return Logger.log("[%s] error creating employee record, invalid first name \"%s\"", managerID, firstName);
+			return Logger.err("[%s] invalid employee first name \"%s\"", managerID, firstName);
 		}
 		if (!Validator.isLastName(lastName)) {
-			return Logger.log("[%s] error creating employee record, invalid last name \"%s\"", managerID, lastName);
+			return Logger.err("[%s] invalid employee last name \"%s\"", managerID, lastName);
 		}
 		if (!Validator.isEmployeeID(employeeID)) {
-			return Logger.log("[%s] error creating employee record, invalid employee ID \"%d\"", managerID, employeeID);
+			return Logger.err("[%s] invalid employee employee ID \"%d\"", managerID, employeeID);
 		}
 		if (!Validator.isEmail(mailID)) {
-			return Logger.log("[%s] error creating employee record, invalid mail ID \"%s\"", managerID, mailID);
+			return Logger.err("[%s] invalid employee mail ID \"%s\"", managerID, mailID);
 		}
 		if (!Validator.isProjectID(projectID)) {
-			return Logger.log("[%s] error creating employee record, invalid project ID \"%s\"", managerID, projectID);
+			return Logger.err("[%s] invalid employee project ID \"%s\"", managerID, projectID);
 		}
 
 		EmployeeRecord record = new EmployeeRecord();
@@ -114,12 +114,12 @@ public class LocationImpl extends LocationPOA {
 	public synchronized String editRecord(String managerID, String recordID, String fieldName, String newValue) {
 		Record record = this.records.read(recordID);
 		if (record == null) {
-			return Logger.log("[%s] error editing record, no record with id \"%s\" found", managerID, recordID);
+			return Logger.err("[%s] no record with id \"%s\" found", managerID, recordID);
 		}
 
 		if (fieldName.equals("mailID")) {
 			if (!Validator.isEmail(newValue)) {
-				return Logger.log("[%s] error editing record, invalid mail ID", managerID);
+				return Logger.err("[%s] invalid mail ID", managerID);
 			}
 			record.mailID = newValue;
 			return Logger.log("[%s] updated mail ID", managerID);
@@ -128,7 +128,7 @@ public class LocationImpl extends LocationPOA {
 		if (Validator.isEmployeeRecordID(recordID)) {
 			if (fieldName.equals("projectID")) {
 				if (!Validator.isProjectID(newValue)) {
-					return Logger.log("[%s] error editing record, invalid project ID", managerID);
+					return Logger.err("[%s] invalid project ID", managerID);
 				}
 				((EmployeeRecord)record).projectID = newValue;
 				return Logger.log("[%s] updated projectID", managerID);
@@ -138,28 +138,28 @@ public class LocationImpl extends LocationPOA {
 		if (Validator.isManagerRecordID(recordID)) {
 			if (fieldName.equals("location")) {
 				if (!Validator.isLocationCode(newValue)) {
-					return Logger.log("[%s] error editing record, invalid location", managerID);
+					return Logger.err("[%s] invalid location", managerID);
 				}
 				((ManagerRecord)record).location = newValue;
 				return Logger.log("[%s] updated location");
 			}
 			if (fieldName.equals("projectInfo.clientName")) {
 				if (!Validator.isClientName(newValue)) {
-					return Logger.log("[%s] error editing record, invalid client name", managerID);
+					return Logger.err("[%s] invalid client name", managerID);
 				}
 				((ManagerRecord)record).projectInfo.clientName = newValue;
 				return Logger.log("[%s] updated project client's name", managerID);
 			}
 			if (fieldName.equals("projectInfo.projectName")) {
 				if (!Validator.isFirstName(newValue)) {
-					return Logger.log("[%s] error editing record, invalid client name", managerID);
+					return Logger.err("[%s] invalid client name", managerID);
 				}
 				((ManagerRecord)record).projectInfo.projectName = newValue;
 				return Logger.log("[%s] updated project name", managerID);
 			}
 		}
 
-		return Logger.log("error editing record, no editable field \"%s\" on record with ID \"%s\"", fieldName, recordID);
+		return Logger.err("no editable field \"%s\" on record with ID \"%s\"", fieldName, recordID);
 	}
 
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {

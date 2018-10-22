@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source run/lib
+source lib
 
 step "compiling idl interface"
 compile_idl

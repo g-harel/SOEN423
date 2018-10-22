@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source run/lib
+source lib
+
 source run/gen
 
 step "compiling source"

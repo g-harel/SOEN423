@@ -1,12 +1,15 @@
 #!/bin/bash
 
-source run/lib
+source lib
+
 source run/build
 
 step "starting naming service"
-start_orbd
+start_orbd &
+sketchy_wait
 
 step "starting servers"
-run_server "CA"
-run_server "US"
-run_server "UK"
+run_server "CA" &
+run_server "US" &
+run_server "UK" &
+sketchy_wait
