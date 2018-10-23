@@ -6,7 +6,7 @@ SRC_PATH=$(pwd)/src
 BIN_PATH=$(pwd)/bin
 LOG_PATH=$BIN_PATH/log
 
-IDL_NAME=DEMS
+IDL_NAME=EmployeeManagementSystem
 CLIENT_CLASS=Client
 SERVER_CLASS=Server
 
@@ -32,7 +32,7 @@ function compile_java {
 }
 
 function start_orbd {
-    orbd -ORBInitialPort $ORB_PORT
+    orbd -ORBInitialPort $ORB_PORT -defaultdb ./bin/orbd
 }
 
 function run_server {

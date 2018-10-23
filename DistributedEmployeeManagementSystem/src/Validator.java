@@ -1,6 +1,6 @@
 public abstract class Validator {
 	public static boolean isLocationCode(String str) {
-		return str.matches("^" + Peers.pattern() + "$");
+		return str.matches("^" + AddressBook.locationPattern() + "$");
 	}
 
 	public static boolean isManagerRecordID(String str) {
@@ -12,7 +12,7 @@ public abstract class Validator {
 	}
 
 	public static boolean isManagerID(String str) {
-		return str.matches("^" + Peers.pattern() + "\\d{5}$");
+		return str.matches("^" + AddressBook.locationPattern() + "\\d{5}$");
 	}
 
 	public static boolean isEmployeeID(int num) {

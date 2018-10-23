@@ -7,6 +7,19 @@ public class RecordStore {
 	public RecordStore() {
 		this.records = new HashMap<Character, ArrayList<Record>>();
 	}
+	
+	public String toString() {
+		String res = "";
+		for (ArrayList<Record> records : this.records.values()) {
+			for (Record record : records) {
+				res += String.format("[%s] %s %s (%s)\n", record.recordID, record.firstName, record.lastName, record.mailID);
+			}
+		}
+	    if (res.length() != 0) {
+	    	res = res.substring(0, res.length() - 1);
+	    }
+		return res;
+	}
 
 	public int count() {
 		int size = 0;

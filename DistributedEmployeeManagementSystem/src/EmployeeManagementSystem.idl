@@ -1,4 +1,4 @@
-module DEMS {
+module EmployeeManagementSystem {
     interface Location {
         readonly attribute string address;
 

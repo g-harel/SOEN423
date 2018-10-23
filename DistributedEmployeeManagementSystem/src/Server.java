@@ -1,4 +1,4 @@
-import DEMS.*;
+import EmployeeManagementSystem.*;
 
 import org.omg.CosNaming.*;
 

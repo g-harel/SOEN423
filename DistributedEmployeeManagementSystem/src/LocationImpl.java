@@ -1,6 +1,6 @@
 import org.omg.CORBA.ORB;
 
-import DEMS.LocationPOA;
+import EmployeeManagementSystem.LocationPOA;
 
 public class LocationImpl extends LocationPOA {
     private ORB orb;
