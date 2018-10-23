@@ -2,13 +2,17 @@ public abstract class Validator {
 	public static boolean isLocationCode(String str) {
 		return str.matches("^" + AddressBook.locationPattern() + "$");
 	}
+	
+	public static boolean isRecordID(String str) {
+		return str.matches("^[A-Z]{2}\\d{5}$");
+	}
 
 	public static boolean isManagerRecordID(String str) {
-		return str.matches("^MR\\d{5}$");
+		return Validator.isRecordID(str) && str.matches("^MR\\d{5}$");
 	}
 
 	public static boolean isEmployeeRecordID(String str) {
-		return str.matches("^ER\\d{5}$");
+		return Validator.isRecordID(str) && str.matches("^ER\\d{5}$");
 	}
 
 	public static boolean isManagerID(String str) {

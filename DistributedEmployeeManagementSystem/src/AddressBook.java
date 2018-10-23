@@ -62,6 +62,14 @@ public class AddressBook {
 		return res;
 	}
 	
+	public int port(String locationCode) {
+		for (LocationEntry location : AddressBook.all) {
+			if (!locationCode.equals(location.locationCode)) {
+				return location.port;
+			}
+		}
+		return 0;
+	}
 	
 	public int[] ports() {
 		int[] res = new int[this.peers.size()];

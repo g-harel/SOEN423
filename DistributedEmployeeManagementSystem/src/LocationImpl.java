@@ -154,7 +154,13 @@ public class LocationImpl extends LocationPOA {
 	}
 
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
-		// TODO Auto-generated method stub
+		if (!Validator.isLocationCode(remoteCenterServerName)) {
+			return Logger.err("[%s] invalid location", managerID);
+		}
+		if (!Validator.isRecordID(remoteCenterServerName)) {
+			return Logger.err("[%s] invalid location", managerID);
+		}
+
 		return null;
 	}
 }
