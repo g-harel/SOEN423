@@ -1,6 +1,12 @@
 #!/bin/bash
 
-function create_employee_record {
+source lib
+
+function list {
+    echo "ls"
+}
+
+function create_employee {
     echo "er
     John
     Doe
@@ -9,17 +15,29 @@ function create_employee_record {
     P00000"
 }
 
-function edit_employee_record {
+function create_manager {
+    echo "mr
+    Samantha
+    Smith
+    654321
+    samantha.smith@example.com
+    P11111
+    Project 1
+    Alex Richard
+    $(fallback "$1" "CA")"
+}
+
+function edit {
     echo "ed
-    $1
-    mailID
-    test@example.com"
+    $(fallback "$1" "ER00000")
+    $(fallback "$2" "mailID")
+    $(fallback "$3" "test@example.com")"
+}
+
+function move {
+    echo "test"
 }
 
 function finish {
     echo "ex"
-}
-
-function list {
-    echo "ls"
 }

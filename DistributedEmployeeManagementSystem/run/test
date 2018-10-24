@@ -8,8 +8,10 @@ source run/servers
 step "running clients"
 
 run_client "CA00000" << EOF >/dev/null &
-$(create_employee_record)
-$(edit_employee_record ER00000)
+$(create_employee)
+$(edit "ER00000")
+$(create_manager)
+$(edit "MR00003" "project.name" "Project ABC")
 $(finish)
 EOF
 

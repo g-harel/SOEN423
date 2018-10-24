@@ -17,12 +17,16 @@ function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
 }
 
-function delay {
-    duration="$1"
-    if [[ $duration == "" ]]; then
-        duration=0.314159
+function fallback {
+    if [[ $1 != "" ]]; then
+        echo "$1"
+    else
+        echo "$2"
     fi
-    sleep $duration
+}
+
+function delay {
+    sleep $(fallback $1 0.3141519)
 }
 
 function compile_idl {

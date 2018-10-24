@@ -131,14 +131,14 @@ public class LocationImpl extends LocationPOA {
 				((ManagerRecord)record).location = newValue;
 				return Logger.log("[%s] updated location");
 			}
-			if (fieldName.equals("projectInfo.clientName")) {
+			if (fieldName.equals("project.client")) {
 				if (!Validator.isClientName(newValue)) {
 					return Logger.err("[%s] invalid client name", managerID);
 				}
 				((ManagerRecord)record).projectInfo.client = newValue;
 				return Logger.log("[%s] updated project client's name", managerID);
 			}
-			if (fieldName.equals("projectInfo.projectName")) {
+			if (fieldName.equals("project.name")) {
 				if (!Validator.isFirstName(newValue)) {
 					return Logger.err("[%s] invalid client name", managerID);
 				}
