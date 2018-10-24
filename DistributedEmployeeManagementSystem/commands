@@ -35,9 +35,11 @@ function edit {
 }
 
 function move {
-    echo "test"
+    echo "mv
+    $(fallback "$1" "ER00000")
+    $(fallback "$2" "US")"
 }
 
 function finish {
-    echo "ex"
+    echo "q"
 }

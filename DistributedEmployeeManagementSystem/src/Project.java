@@ -1,12 +1,14 @@
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
 	public String id;
 	public String client;
 	public String name;
 
 	public Project() {}
 
-	public Project(String serialized) {
-		String data[] = serialized.split(";", 3);
+	public Project(String raw) {
+		String data[] = raw.split(";", 3);
 		if (data.length > 0) {
 			this.id = data[0].trim();
 		}

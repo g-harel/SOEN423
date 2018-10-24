@@ -1,4 +1,6 @@
-public abstract class Record {
+import java.io.Serializable;
+
+public abstract class Record implements Serializable {
 	public abstract String getType();
 	
 	public String recordID;

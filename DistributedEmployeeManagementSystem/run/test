@@ -9,20 +9,19 @@ step "running clients"
 
 run_client "CA00000" << EOF >/dev/null &
 $(create_employee)
-$(edit "ER00000")
+$(move "ER00000" "US")
+$(finish)
+EOF
+
+run_client "US00000" << EOF >/dev/null &
 $(create_manager)
-$(edit "MR00003" "project.name" "Project ABC")
+$(edit "MR00001" "project.name" "Project ABC")
 $(finish)
 EOF
 
 delay
 
-run_client "CA00001" << EOF >/dev/null &
-$(list)
-$(finish)
-EOF
-
-run_client "UK00001" << EOF >/dev/null &
+run_client "UK00000" << EOF >/dev/null &
 $(list)
 $(finish)
 EOF

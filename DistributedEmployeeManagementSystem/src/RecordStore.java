@@ -7,7 +7,7 @@ public class RecordStore {
 	public RecordStore() {
 		this.records = new HashMap<Character, ArrayList<Record>>();
 	}
-	
+
 	public String toString() {
 		String res = "";
 		for (ArrayList<Record> records : this.records.values()) {
@@ -15,9 +15,9 @@ public class RecordStore {
 				res += String.format("[%s] %s %s (%s)\n", record.recordID, record.firstName, record.lastName, record.mailID);
 			}
 		}
-	    if (res.length() != 0) {
-	    	res = res.substring(0, res.length() - 1);
-	    }
+		if (res.length() != 0) {
+			res = res.substring(0, res.length() - 1);
+		}
 		return res;
 	}
 
@@ -50,5 +50,18 @@ public class RecordStore {
 			records = this.records.get(index);
 		}
 		records.add(record);
+	}
+
+	public void delete(String recordID) {
+		for (ArrayList<Record> records : this.records.values()) {
+			int count = 0;
+			for (Record record : records) {
+				if (record.recordID.equals(recordID)) {
+					records.remove(count);
+					return;
+				}
+				count++;
+			}
+		}
 	}
 }
