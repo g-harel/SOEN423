@@ -11,14 +11,18 @@ CLIENT_CLASS=Client
 SERVER_CLASS=Server
 
 clear
-rm -rf $LOG_PATH
+# rm -rf $LOG_PATH
 
 function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
 }
 
 function sketchy_wait {
-    sleep 0.314159
+    duration="$1"
+    if [[ $duration == "" ]]; then
+        duration=0.314159
+    fi
+    sleep $duration
 }
 
 function compile_idl {
@@ -53,9 +57,9 @@ function cleanup {
     step "cleaning up"
     sketchy_wait
     pkill orbd
-    background_jobs=$(jobs -p)
-    if [[ $background_jobs != "" ]]; then
-        kill $background_jobs &>/dev/null
+    rogues=$(ps T | grep -oP "^\s*\d+(?=.*java (Server|Client) [A-Z]{2})" | grep -oP "\w+")
+    if [[ $rogues != "" ]]; then
+        kill $rogues
     fi
 }
 

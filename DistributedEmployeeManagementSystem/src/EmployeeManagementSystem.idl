@@ -1,7 +1,5 @@
 module EmployeeManagementSystem {
     interface Location {
-        readonly attribute string address;
-
         string createMRecord(
             in string managerID,
             in string firstName,

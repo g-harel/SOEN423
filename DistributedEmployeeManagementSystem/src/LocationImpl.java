@@ -15,16 +15,10 @@ public class LocationImpl extends LocationPOA {
 
     ///
 
-    private String address;
-	private RecordStore records;
+    private RecordServer rs;
 
-	public LocationImpl(String address) {
-		this.address = address;
-		this.records = new RecordStore();
-	}
-
-	public String address() {
-		return this.address;
+	public LocationImpl(RecordServer rs) {
+		this.rs = rs;
 	}
 
 	public synchronized String createMRecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String project, String location) {
@@ -63,7 +57,7 @@ public class LocationImpl extends LocationPOA {
 		record.projectInfo = p;
 		record.location = location;
 
-		this.records.write(record);
+		this.rs.write(record);
 
 		return Logger.log("[%s] manager record with id \"%s\" created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
@@ -92,18 +86,17 @@ public class LocationImpl extends LocationPOA {
 		record.mailID = mailID;
 		record.projectID = projectID;
 
-		this.records.write(record);
+		this.rs.write(record);
 
 		return Logger.log("[%s] employee record with id \"%s\" created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
 
 	public synchronized String getRecordCounts(String managerID) {
-		// TODO query other servers
-		return String.format(this.address, this.records.count());
+		return this.rs.sendCountAll();
 	}
 
 	public synchronized String editRecord(String managerID, String recordID, String fieldName, String newValue) {
-		Record record = this.records.read(recordID);
+		Record record = this.rs.read(recordID);
 		if (record == null) {
 			return Logger.err("[%s] no record with id \"%s\" found", managerID, recordID);
 		}

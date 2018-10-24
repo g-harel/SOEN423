@@ -64,7 +64,7 @@ public class AddressBook {
 	
 	public int port(String locationCode) {
 		for (LocationEntry location : AddressBook.all) {
-			if (!locationCode.equals(location.locationCode)) {
+			if (locationCode.equals(location.locationCode)) {
 				return location.port;
 			}
 		}

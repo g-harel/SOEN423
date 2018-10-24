@@ -14,4 +14,4 @@ run_client "CA00001" << EOF >/dev/null &
 Steve Smith
 EOF
 
-sketchy_wait
+sketchy_wait 1
