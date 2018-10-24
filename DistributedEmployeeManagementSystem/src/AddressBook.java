@@ -3,18 +3,22 @@ import java.util.ArrayList;
 class LocationEntry {
 	public String locationCode;
 	public int port;
-	
-	public LocationEntry(String locationCode, int port) {
+	public int index;
+
+	public LocationEntry(String locationCode, int startPort, int index) {
 		this.locationCode = locationCode;
-		this.port = port;
+		this.port = startPort + index;
+		this.index = index;
 	}
 }
 
 public class AddressBook {
+	private static int basePort = 3331;
+
 	private static LocationEntry[] all = new LocationEntry[] {
-		new LocationEntry("CA", 3331),
-		new LocationEntry("US", 3332),
-		new LocationEntry("UK", 3333),
+		new LocationEntry("CA", AddressBook.basePort, 0),
+		new LocationEntry("US", AddressBook.basePort, 1),
+		new LocationEntry("UK", AddressBook.basePort, 2),
 	};
 
 	public static String locationPattern() {
@@ -43,15 +47,23 @@ public class AddressBook {
 			}
 		}
 	}
-	
+
 	public String selfName() {
 		return this.self.locationCode;
 	}
-	
+
 	public int selfPort() {
 		return this.self.port;
 	}
-	
+
+	public int selfIndex() {
+		return this.self.index;
+	}
+
+	public int total() {
+		return AddressBook.all.length;
+	}
+
 	public String[] names() {
 		String[] res = new String[this.peers.size()];
 		int i = 0;
@@ -61,7 +73,7 @@ public class AddressBook {
 		}
 		return res;
 	}
-	
+
 	public int port(String locationCode) {
 		for (LocationEntry location : AddressBook.all) {
 			if (locationCode.equals(location.locationCode)) {
@@ -70,7 +82,7 @@ public class AddressBook {
 		}
 		return 0;
 	}
-	
+
 	public int[] ports() {
 		int[] res = new int[this.peers.size()];
 		int i = 0;

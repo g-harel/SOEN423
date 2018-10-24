@@ -20,8 +20,6 @@ public class Client {
 		Logger.writeTo("client-" + managerID);
 		Logger.log("starting as \"%s\"", managerID);
 
-		Prompt.forValue("name");
-
 		try {
 	        ORB orb = ORB.init(args, null);
 
@@ -34,7 +32,7 @@ public class Client {
 
 			Location locationImpl = LocationHelper.narrow(ncRef.resolve_str(locationCode));
 
-	        Logger.log(locationImpl.getRecordCounts(managerID));
+			while (InteractiveClient.start(locationImpl, managerID)) {}
 		} catch (Exception e) {
 			Logger.err("%s", e);
 		}

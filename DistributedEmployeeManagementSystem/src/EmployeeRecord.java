@@ -1,5 +1,7 @@
 public class EmployeeRecord extends Record {
-	public static String prefix = "ER";
+	public String getType() {
+		return "ER";
+	}
 
 	public String projectID;
 }

@@ -1,5 +1,7 @@
 public class ManagerRecord extends Record {
-	public static String prefix = "MR";
+	public String getType() {
+		return "MR";
+	}
 
 	public Project projectInfo;
 	public String location;

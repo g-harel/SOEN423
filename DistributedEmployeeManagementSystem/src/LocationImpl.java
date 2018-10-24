@@ -39,14 +39,14 @@ public class LocationImpl extends LocationPOA {
 		}
 
 		Project p = new Project(project);
-		if (!Validator.isProjectID(p.projectID)) {
-			return Logger.err("[%s] invalid manager project ID \"%s\"", managerID, p.projectID);
+		if (!Validator.isProjectID(p.id)) {
+			return Logger.err("[%s] invalid manager project ID \"%s\"", managerID, p.id);
 		}
-		if (!Validator.isClientName(p.clientName)) {
-			return Logger.err("[%s] invalid manager client name \"%s\"", managerID, p.clientName);
+		if (!Validator.isClientName(p.client)) {
+			return Logger.err("[%s] invalid manager client name \"%s\"", managerID, p.client);
 		}
-		if (!Validator.isProjectName(p.projectName)) {
-			return Logger.err("[%s] invalid manager project name \"%s\"", managerID, p.projectName);
+		if (!Validator.isProjectName(p.name)) {
+			return Logger.err("[%s] invalid manager project name \"%s\"", managerID, p.name);
 		}
 
 		ManagerRecord record = new ManagerRecord();
@@ -57,7 +57,7 @@ public class LocationImpl extends LocationPOA {
 		record.projectInfo = p;
 		record.location = location;
 
-		this.rs.write(record);
+		this.rs.add(record);
 
 		return Logger.log("[%s] manager record with id \"%s\" created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
@@ -86,16 +86,19 @@ public class LocationImpl extends LocationPOA {
 		record.mailID = mailID;
 		record.projectID = projectID;
 
-		this.rs.write(record);
+		this.rs.add(record);
 
 		return Logger.log("[%s] employee record with id \"%s\" created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
 
 	public synchronized String getRecordCounts(String managerID) {
-		return this.rs.sendCountAll();
+		Logger.log("[%s] counting records in all peers", managerID);
+		return this.rs.sendListAll();
 	}
 
 	public synchronized String editRecord(String managerID, String recordID, String fieldName, String newValue) {
+		Logger.log("[%s] editing field \"%s\" on record with ID \"%s\"", managerID, fieldName, recordID);
+		
 		Record record = this.rs.read(recordID);
 		if (record == null) {
 			return Logger.err("[%s] no record with id \"%s\" found", managerID, recordID);
@@ -117,6 +120,7 @@ public class LocationImpl extends LocationPOA {
 				((EmployeeRecord)record).projectID = newValue;
 				return Logger.log("[%s] updated projectID", managerID);
 			}
+			return Logger.err("no editable field \"%s\" on employee record", fieldName);
 		}
 
 		if (Validator.isManagerRecordID(recordID)) {
@@ -131,19 +135,18 @@ public class LocationImpl extends LocationPOA {
 				if (!Validator.isClientName(newValue)) {
 					return Logger.err("[%s] invalid client name", managerID);
 				}
-				((ManagerRecord)record).projectInfo.clientName = newValue;
+				((ManagerRecord)record).projectInfo.client = newValue;
 				return Logger.log("[%s] updated project client's name", managerID);
 			}
 			if (fieldName.equals("projectInfo.projectName")) {
 				if (!Validator.isFirstName(newValue)) {
 					return Logger.err("[%s] invalid client name", managerID);
 				}
-				((ManagerRecord)record).projectInfo.projectName = newValue;
+				((ManagerRecord)record).projectInfo.name = newValue;
 				return Logger.log("[%s] updated project name", managerID);
 			}
 		}
-
-		return Logger.err("no editable field \"%s\" on record with ID \"%s\"", fieldName, recordID);
+		return Logger.err("no editable field \"%s\" on manager record", fieldName);
 	}
 
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {

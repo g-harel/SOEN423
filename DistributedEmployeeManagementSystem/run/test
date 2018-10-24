@@ -1,17 +1,28 @@
 #!/bin/bash
 
 source lib
+source commands
 
 source run/servers
 
 step "running clients"
 
 run_client "CA00000" << EOF >/dev/null &
-John Doe
+$(create_employee_record)
+$(edit_employee_record ER00000)
+$(finish)
 EOF
+
+delay
 
 run_client "CA00001" << EOF >/dev/null &
-Steve Smith
+$(list)
+$(finish)
 EOF
 
-sketchy_wait 1
+run_client "UK00001" << EOF >/dev/null &
+$(list)
+$(finish)
+EOF
+
+delay 1

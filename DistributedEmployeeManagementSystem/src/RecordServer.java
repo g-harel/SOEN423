@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 public class RecordServer extends RecordStore implements Runnable {
 	private AddressBook ab;
+	private int recordIDCount = 0;
 	private boolean running = true;
 	private DatagramSocket serverSocket;
 	private DatagramSocket clientSocket;
@@ -21,18 +22,24 @@ public class RecordServer extends RecordStore implements Runnable {
 		} catch (SocketException e) {
 			Logger.err("could not bind to server socket \"%s\": %s", serverPort, e);
 		}
-		Logger.log("binded to server port \"%s\"", serverPort);
+		Logger.log("bound to server port \"%s\"", serverPort);
 
-		int clientPort = this.ab.names().length + 1 + this.ab.selfPort();
+		int clientPort = this.ab.total() + this.ab.selfPort();
 		try {
 			this.clientSocket = new DatagramSocket(clientPort);
 		} catch (SocketException e) {
 			Logger.err("could not bind to client socket \"%s\": %s", clientPort, e);
 		}
-		Logger.log("binded to client port \"%s\"", clientPort);
+		Logger.log("bound to client port \"%s\"", clientPort);
+	}
+	
+	public void add(Record record) {
+		int ID = this.ab.selfIndex() + (this.ab.total() * this.recordIDCount++);
+		record.recordID = record.getType() + String.format("%05d", ID);
+		this.write(record);
 	}
 
-	public synchronized void kill() {
+	public void kill() {
 		this.running = false;
 		this.serverSocket.close();
 		this.clientSocket.close();
@@ -53,12 +60,15 @@ public class RecordServer extends RecordStore implements Runnable {
 			}
 			UDPMessage request = new UDPMessage(new String(requestPacket.getData(), 0, requestPacket.getLength()));
 
-			Logger.log("[UDP] received request of type \"%s\"", request.type);
+			Logger.log("[UDP] <<< \"%s\"", request.type);
 
 			UDPMessage response = null;
 			switch(request.type) {
-			case "count":
-				response = handleCount();
+			case RecordServer.typeList:
+				response = this.handleList();
+				break;
+			case RecordServer.typeCount:
+				response = this.handleCount();
 				break;
 			}
 
@@ -77,7 +87,7 @@ public class RecordServer extends RecordStore implements Runnable {
 				continue;
 			}
 
-			Logger.log("[UDP] sent response for request of type \"%s\"", request.type);
+			Logger.log("[UDP] >>> \"%s\"", request.type);
 		}
 	}
 
@@ -87,8 +97,6 @@ public class RecordServer extends RecordStore implements Runnable {
 
 		int port = this.ab.port(locationCode);
 		InetAddress addr;
-
-		Logger.log("[UDP] sending \"%s\" request to \"%s\" on port \"%d\"", msg.type, locationCode, port);
 
 		try {
 			addr= InetAddress.getByName("localhost");
@@ -106,7 +114,7 @@ public class RecordServer extends RecordStore implements Runnable {
 			return null;
 		}
 
-		Logger.log("[UDP] sent \"%s\" request to \"%s\" on port \"%d\"", msg.type, locationCode, port);
+		Logger.log("[UDP] >>> \"%s\" \"%s\"", locationCode, msg.type);
 
 		buffer = new byte[256];
 		DatagramPacket responsePacket = new DatagramPacket(buffer, buffer.length);
@@ -120,37 +128,45 @@ public class RecordServer extends RecordStore implements Runnable {
 
 		UDPMessage response = new UDPMessage(new String(responsePacket.getData(), 0, responsePacket.getLength()));
 
-		Logger.log("[UDP] received response for request of type \"%s\"", msg.type);
+		Logger.log("[UDP] <<< \"%s\" \"%s\"", locationCode, msg.type);
 
 		return response;
 	}
 
 	///
 
-	public String sendCountAll() {
-		String res = this.handleCount().body;
-		for (String val : this.ab.names()) {
-			try {
-				res += ", " + sendCount(val);
-			} catch (IOException e) {}
-		}
-		return res;
-	}
+	private static final String typeList = "list";
 
-	public String sendCount(String locationCode) throws IOException {
-		UDPMessage response = this.send(locationCode, new UDPMessage("count"));
-		return response.body;
-	}
-
-	public UDPMessage handleCount() {
+	public UDPMessage handleList() {
 		UDPMessage res = new UDPMessage();
 		res.body = ab.selfName() + " " + this.count();
 		return res;
 	}
 
-	///
+	public String sendList(String locationCode) throws IOException {
+		UDPMessage response = this.send(locationCode, new UDPMessage(RecordServer.typeList));
+		return response.body;
+	}
 
-	// TODO record ID agreement
+	public String sendListAll() {
+		String res = this.handleList().body;
+		for (String val : this.ab.names()) {
+			try {
+				res += ", " + sendList(val);
+			} catch (IOException e) {}
+		}
+		return res;
+	}
+
+	///
+	
+	public static final String typeCount = "count";
+
+	public UDPMessage handleCount() {
+		UDPMessage res = new UDPMessage();
+		res.body = String.format("%d", this.recordIDCount);
+		return res;
+	}
 
 	///
 

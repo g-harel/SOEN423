@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function create_employee_record {
+    echo "er
+    John
+    Doe
+    123456
+    john.doe@example.com
+    P00000"
+}
+
+function edit_employee_record {
+    echo "ed
+    $1
+    mailID
+    test@example.com"
+}
+
+function finish {
+    echo "ex"
+}
+
+function list {
+    echo "ls"
+}
