@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Base64;
 
@@ -16,6 +17,7 @@ public class RecordServer extends RecordStore implements Runnable {
 	private boolean running = true;
 	private DatagramSocket serverSocket;
 	private DatagramSocket clientSocket;
+	private int requestTimeout = 100;
 
 	public RecordServer(AddressBook ab) {
 		super();
@@ -32,6 +34,7 @@ public class RecordServer extends RecordStore implements Runnable {
 		int clientPort = this.ab.total() + this.ab.selfPort();
 		try {
 			this.clientSocket = new DatagramSocket(clientPort);
+			this.clientSocket.setSoTimeout(1000);
 		} catch (SocketException e) {
 			Logger.err("could not bind to client socket '%s': %s", clientPort, e);
 		}
@@ -122,11 +125,13 @@ public class RecordServer extends RecordStore implements Runnable {
 
 		Logger.log("[UDP] >>> '%s' '%s'", locationCode, msg.type);
 
-		buffer = new byte[256];
+		buffer = new byte[UDPMessage.size];
 		DatagramPacket responsePacket = new DatagramPacket(buffer, buffer.length);
 		try {
-			// TODO timeout
 			this.clientSocket.receive(responsePacket);
+		} catch (SocketTimeoutException e) {
+			Logger.log("[UDP] --- '%s' '%s'", locationCode, msg.type);
+			throw new UDPException(Logger.err("request to '%s' timed out", locationCode));
 		} catch (IOException e) {
 			throw new UDPException(Logger.err("could not receive request: %s", e));
 		}
@@ -236,7 +241,7 @@ public class RecordServer extends RecordStore implements Runnable {
 				return false;
 			}
 		} catch (Exception e) {
-			Logger.err("could not check with destination for record with ID '%s'", recordID);
+			Logger.err("could not check destination for record with ID '%s'", recordID);
 			return false;
 		}
 

@@ -5,13 +5,14 @@ ORB_PORT=1051
 SRC_PATH=$(pwd)/src
 BIN_PATH=$(pwd)/bin
 LOG_PATH=$BIN_PATH/log
+ORBD_BIN_PATH=$BIN_PATH/orbd
 
 IDL_NAME=EmployeeManagementSystem
 CLIENT_CLASS=Client
 SERVER_CLASS=Server
 
 clear
-# rm -rf $LOG_PATH
+rm -rf $LOG_PATH
 
 function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
@@ -40,7 +41,7 @@ function compile_java {
 }
 
 function start_orbd {
-    orbd -ORBInitialPort $ORB_PORT -defaultdb ./bin/orbd
+    orbd -ORBInitialPort $ORB_PORT -defaultdb $ORBD_BIN_PATH
 }
 
 function run_server {
@@ -61,7 +62,8 @@ function cleanup {
     step "cleaning up"
     delay
     pkill orbd
-    rogues=$(ps T | grep -oP "^\s*\d+(?=.*java (Server|Client) [A-Z]{2})" | grep -oP "\w+")
+    rm -rf $ORBD_BIN_PATH
+    rogues=$(ps T | grep -oP "^\s*\d+(?=.*java ($SERVER_CLASS|$CLIENT_CLASS) [A-Z]{2})" | grep -oP "\w+")
     if [[ $rogues != "" ]]; then
         kill $rogues
     fi
