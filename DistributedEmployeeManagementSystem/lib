@@ -32,7 +32,7 @@ function delay {
 
 function compile_idl {
     rm -rf $SRC_PATH/$IDL_NAME
-    idlj -fall -td $SRC_PATH $SRC_PATH/$IDL_NAME.idl
+    idlj -fall -td $SRC_PATH $IDL_NAME.idl
 }
 
 function compile_java {
@@ -46,23 +46,32 @@ function start_orbd {
 
 function run_server {
     pushd $BIN_PATH >/dev/null
+
     >&2 echo "starting server:" "$@"
     java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
+
     popd >/dev/null
 }
 
 function run_client {
     pushd $BIN_PATH >/dev/null
+
     >&2 echo "starting client:" "$@"
     java $CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
+
     popd >/dev/null
 }
 
 function cleanup {
+    while [[ $(ps T | grep -P "java $CLIENT_CLASS [A-Z]{2}") != "" ]]; do
+        delay
+    done
+
     step "cleaning up"
-    delay
+
     pkill orbd
     rm -rf $ORBD_BIN_PATH
+
     rogues=$(ps T | grep -oP "^\s*\d+(?=.*java ($SERVER_CLASS|$CLIENT_CLASS) [A-Z]{2})" | grep -oP "\w+")
     if [[ $rogues != "" ]]; then
         kill $rogues

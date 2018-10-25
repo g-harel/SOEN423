@@ -25,5 +25,3 @@ run_client "UK00000" << EOF >/dev/null &
 $(list)
 $(finish)
 EOF
-
-delay 2

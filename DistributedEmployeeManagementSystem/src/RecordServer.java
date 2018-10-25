@@ -247,7 +247,7 @@ public class RecordServer extends RecordStore implements Runnable {
 
 		try {
 			boolean success = this.sendTransfer(locationCode, record);
-			if (!success) throw new UDPException("");
+			if (!success) return false;
 		} catch (UDPException e) {
 			return false;
 		}

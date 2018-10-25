@@ -21,7 +21,7 @@ public class RecordStore {
 		return res;
 	}
 
-	public int count() {
+	public synchronized int count() {
 		int size = 0;
 		for (ArrayList<Record> records : this.records.values()) {
 			size += records.size();
@@ -29,7 +29,7 @@ public class RecordStore {
 		return size;
 	}
 
-	public Record read(String recordID) {
+	public synchronized Record read(String recordID) {
 		for (ArrayList<Record> records : this.records.values()) {
 			for (Record record : records) {
 				if (record.recordID.equals(recordID)) {
@@ -40,7 +40,7 @@ public class RecordStore {
 		return null;
 	}
 
-	public void write(Record record) {
+	public synchronized void write(Record record) {
 		Character index = record.lastName.toUpperCase().charAt(0);
 		ArrayList<Record> records = null;
 		if (!this.records.containsKey(index)) {
@@ -52,7 +52,7 @@ public class RecordStore {
 		records.add(record);
 	}
 
-	public void delete(String recordID) {
+	public synchronized void delete(String recordID) {
 		for (ArrayList<Record> records : this.records.values()) {
 			int count = 0;
 			for (Record record : records) {
