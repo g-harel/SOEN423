@@ -21,7 +21,7 @@ public class LocationImpl extends LocationPOA {
 		this.rs = rs;
 	}
 
-	public synchronized String createMRecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String project, String location) {
+	public String createMRecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String project, String location) {
 		if (!Validator.isFirstName(firstName)) {
 			return Logger.err("[%s] invalid manager first name '%s'", managerID, firstName);
 		}
@@ -62,7 +62,7 @@ public class LocationImpl extends LocationPOA {
 		return Logger.log("[%s] manager record with id '%s' created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
 
-	public synchronized String createERecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String projectID) {
+	public String createERecord(String managerID, String firstName, String lastName, int employeeID, String mailID, String projectID) {
 		if (!Validator.isFirstName(firstName)) {
 			return Logger.err("[%s] invalid employee first name '%s'", managerID, firstName);
 		}
@@ -91,12 +91,12 @@ public class LocationImpl extends LocationPOA {
 		return Logger.log("[%s] employee record with id '%s' created for \"%s %s\"", managerID, record.recordID, firstName, lastName);
 	}
 
-	public synchronized String getRecordCounts(String managerID) {
+	public String getRecordCounts(String managerID) {
 		Logger.log("[%s] counting records in all peers", managerID);
 		return this.rs.sendListAll();
 	}
 
-	public synchronized String editRecord(String managerID, String recordID, String fieldName, String newValue) {
+	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
 		Logger.log("[%s] editing field '%s' on record with ID '%s'", managerID, fieldName, recordID);
 
 		Record record = this.rs.read(recordID);
