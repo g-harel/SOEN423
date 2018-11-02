@@ -1,0 +1,12 @@
+#!/bin/bash
+
+LIB=$1
+CMD=$2
+
+shift 2
+
+source scripts/lib/common
+
+source scripts/lib/$LIB
+
+source scripts/$CMD

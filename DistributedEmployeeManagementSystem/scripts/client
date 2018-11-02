@@ -1,8 +1,6 @@
 #!/bin/bash
 
-source lib
-
-source run/servers
+source scripts/servers
 
 step "starting client"
 run_client "$1"

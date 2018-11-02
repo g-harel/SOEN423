@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function codegen {
+    wsgen -cp $BIN_PATH -d $BIN_PATH $WS_PKG.$JAX_NAME
+}
+
+function setup {
+    echo -e ""
+}
+
+function run_server {
+    pushd $BIN_PATH >/dev/null
+
+    >&2 echo "starting server:" "$@"
+
+    popd >/dev/null
+}
+
+function run_client {
+    pushd $BIN_PATH >/dev/null
+
+    >&2 echo "starting client:" "$@"
+
+    popd >/dev/null
+}

@@ -2,14 +2,13 @@
 
 ORB_PORT=1051
 
-CORBA_NAME=corba
-WS_NAME=webservice
-
 SRC_PATH=$(pwd)/src
 BIN_PATH=$(pwd)/bin
 LOG_PATH=$BIN_PATH/log
 ORBD_BIN_PATH=$BIN_PATH/orbd
 
+CORBA_PKG=corba
+WS_PKG=webservice
 IDL_NAME=EmployeeManagementSystem
 JAX_NAME=LocationWS
 CLIENT_CLASS=Client
@@ -17,6 +16,7 @@ SERVER_CLASS=Server
 
 clear
 rm -rf $BIN_PATH
+mkdir -p $BIN_PATH
 
 function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
@@ -34,40 +34,8 @@ function delay {
     sleep $(fallback $1 0.3141519)
 }
 
-function compile_idl {
-    rm -rf $SRC_PATH/$CORBA_NAME/$IDL_NAME
-    idlj -fall -td $SRC_PATH -pkgPrefix $IDL_NAME corba $SRC_PATH/$CORBA_NAME/$IDL_NAME.idl
-}
-
-function gen_jax {
-    wsgen -cp $BIN_PATH -d $BIN_PATH $WS_NAME.$JAX_NAME
-}
-
 function compile_java {
-    mkdir -p $BIN_PATH
     javac -d $BIN_PATH -cp src:. $SRC_PATH/**/*.java
-}
-
-function start_orbd {
-    orbd -ORBInitialPort $ORB_PORT -defaultdb $ORBD_BIN_PATH
-}
-
-function run_server {
-    pushd $BIN_PATH >/dev/null
-
-    >&2 echo "starting server:" "$@"
-    java $CORBA_NAME.$SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
-
-    popd >/dev/null
-}
-
-function run_client {
-    pushd $BIN_PATH >/dev/null
-
-    >&2 echo "starting client:" "$@"
-    java $CORBA_NAME.$CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
-
-    popd >/dev/null
 }
 
 function cleanup {

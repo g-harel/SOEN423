@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function codegen {
+    rm -rf $SRC_PATH/$CORBA_PKG/$IDL_NAME
+    idlj -fall -td $SRC_PATH -pkgPrefix $IDL_NAME corba $SRC_PATH/$CORBA_PKG/$IDL_NAME.idl
+}
+
+function setup {
+    orbd -ORBInitialPort $ORB_PORT -defaultdb $ORBD_BIN_PATH
+}
+
+function run_server {
+    pushd $BIN_PATH >/dev/null
+
+    >&2 echo "starting server:" "$@"
+    java $CORBA_PKG.$SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
+
+    popd >/dev/null
+}
+
+function run_client {
+    pushd $BIN_PATH >/dev/null
+
+    >&2 echo "starting client:" "$@"
+    java $CORBA_PKG.$CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
+
+    popd >/dev/null
+}

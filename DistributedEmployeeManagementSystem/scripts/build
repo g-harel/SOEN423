@@ -1,0 +1,7 @@
+#!/bin/bash
+
+step "compiling source"
+compile_java
+
+step "generating code"
+codegen

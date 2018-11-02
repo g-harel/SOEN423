@@ -1,9 +1,8 @@
 #!/bin/bash
 
-source lib
-source commands
+source scripts/servers
 
-source run/servers
+source scripts/lib/commands
 
 step "running concurrent scenario"
 

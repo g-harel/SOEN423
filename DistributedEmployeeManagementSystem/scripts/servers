@@ -1,15 +1,13 @@
 #!/bin/bash
 
-source lib
+source scripts/build
 
-source run/build
-
-step "starting naming service"
-start_orbd &
+step "setting up"
+setup &
 delay
 
 step "starting servers"
 run_server "CA" &
 run_server "US" &
 run_server "UK" &
-delay
+delay 0.6
