@@ -1,7 +1,11 @@
-import EmployeeManagementSystem.*;
+package corba;
 
+import corba.EmployeeManagementSystem.*;
+import location.AddressBook;
+import location.Logger;
+import location.RecordServer;
+import location.Validator;
 import org.omg.CosNaming.*;
-
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 import org.omg.PortableServer.POA;

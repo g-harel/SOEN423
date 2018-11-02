@@ -2,17 +2,21 @@
 
 ORB_PORT=1051
 
+CORBA_NAME=corba
+WS_NAME=webservice
+
 SRC_PATH=$(pwd)/src
 BIN_PATH=$(pwd)/bin
 LOG_PATH=$BIN_PATH/log
 ORBD_BIN_PATH=$BIN_PATH/orbd
 
 IDL_NAME=EmployeeManagementSystem
+JAX_NAME=LocationWS
 CLIENT_CLASS=Client
 SERVER_CLASS=Server
 
 clear
-rm -rf $LOG_PATH
+rm -rf $BIN_PATH
 
 function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"
@@ -31,13 +35,17 @@ function delay {
 }
 
 function compile_idl {
-    rm -rf $SRC_PATH/$IDL_NAME
-    idlj -fall -td $SRC_PATH $IDL_NAME.idl
+    rm -rf $SRC_PATH/$CORBA_NAME/$IDL_NAME
+    idlj -fall -td $SRC_PATH -pkgPrefix $IDL_NAME corba $SRC_PATH/$CORBA_NAME/$IDL_NAME.idl
+}
+
+function gen_jax {
+    wsgen -cp $BIN_PATH -d $BIN_PATH $WS_NAME.$JAX_NAME
 }
 
 function compile_java {
     mkdir -p $BIN_PATH
-    javac -d $BIN_PATH $SRC_PATH/*.java $SRC_PATH/**/*.java
+    javac -d $BIN_PATH -cp src:. $SRC_PATH/**/*.java
 }
 
 function start_orbd {
@@ -48,7 +56,7 @@ function run_server {
     pushd $BIN_PATH >/dev/null
 
     >&2 echo "starting server:" "$@"
-    java $SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
+    java $CORBA_NAME.$SERVER_CLASS "$@" -ORBInitialPort $ORB_PORT >/dev/null
 
     popd >/dev/null
 }
@@ -57,13 +65,13 @@ function run_client {
     pushd $BIN_PATH >/dev/null
 
     >&2 echo "starting client:" "$@"
-    java $CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
+    java $CORBA_NAME.$CLIENT_CLASS "$@" -ORBInitialPort $ORB_PORT
 
     popd >/dev/null
 }
 
 function cleanup {
-    while [[ $(ps T | grep -P "java $CLIENT_CLASS [A-Z]{2}") != "" ]]; do
+    while [[ $(ps T | grep -P "java .*$CLIENT_CLASS [A-Z]{2}") != "" ]]; do
         delay
     done
 
@@ -72,7 +80,7 @@ function cleanup {
     pkill orbd
     rm -rf $ORBD_BIN_PATH
 
-    rogues=$(ps T | grep -oP "^\s*\d+(?=.*java ($SERVER_CLASS|$CLIENT_CLASS) [A-Z]{2})" | grep -oP "\w+")
+    rogues=$(ps T | grep -oP "^\s*\d+(?=.*java .*($SERVER_CLASS|$CLIENT_CLASS) [A-Z]{2})" | grep -oP "\w+")
     if [[ $rogues != "" ]]; then
         kill $rogues
     fi

@@ -1,3 +1,5 @@
+package location;
+
 public abstract class Validator {
 	public static boolean isLocationCode(String str) {
 		return str.matches(AddressBook.locationPattern());

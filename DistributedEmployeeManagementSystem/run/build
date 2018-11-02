@@ -2,7 +2,11 @@
 
 source lib
 
-source run/gen
+step "compiling idl interface"
+compile_idl
 
 step "compiling source"
 compile_java
+
+step "generating jax artifacts"
+gen_jax

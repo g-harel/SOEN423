@@ -1,3 +1,5 @@
+package location;
+
 import java.util.Scanner;
 
 public class Prompt {

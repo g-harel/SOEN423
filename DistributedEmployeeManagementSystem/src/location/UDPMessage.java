@@ -1,6 +1,8 @@
+package location;
+
 class UDPMessage {
 	public final static int size = 576;
-	
+
 	public String type;
 	public String body;
 

@@ -1,23 +1,9 @@
-import org.omg.CORBA.ORB;
+package location;
 
-import EmployeeManagementSystem.LocationPOA;
-
-public class LocationImpl extends LocationPOA {
-	private ORB orb;
-
-	public void setORB(ORB orb) {
-		this.orb = orb;
-	}
-
-	public void shutdown() {
-		this.orb.shutdown(false);
-	}
-
-	///
-
+public class Location implements ILocation {
 	private RecordServer rs;
 
-	public LocationImpl(RecordServer rs) {
+	public Location(RecordServer rs) {
 		this.rs = rs;
 	}
 

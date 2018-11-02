@@ -1,5 +1,9 @@
-import EmployeeManagementSystem.*;
+package corba;
 
+import corba.EmployeeManagementSystem.*;
+import location.InteractiveClient;
+import location.Logger;
+import location.Validator;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.CORBA.*;
@@ -27,10 +31,10 @@ public class Client {
 			// Get reference to naming service.
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-	
+
 			// Create implementation from named reference.
 			String locationCode = managerID.substring(0, 2);
-			
+
 			try {
 				locationImpl = LocationHelper.narrow(ncRef.resolve_str(locationCode));
 			} catch (NotFound e) {
@@ -41,7 +45,7 @@ public class Client {
 			Logger.err("could not start client: %s", e);
 			return;
 		}
-	
-		while (InteractiveClient.start(locationImpl, managerID)) {}
+
+		while (InteractiveClient.start(new LocationRef(locationImpl), managerID)) {}
 	}
 }

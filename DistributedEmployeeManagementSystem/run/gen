@@ -1,6 +1,0 @@
-#!/bin/bash
-
-source lib
-
-step "compiling idl interface"
-compile_idl

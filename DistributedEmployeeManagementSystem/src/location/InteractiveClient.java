@@ -1,7 +1,7 @@
-import EmployeeManagementSystem.Location;
+package location;
 
 public class InteractiveClient {
-	public static boolean start(Location loc, String managerID) {
+	public static boolean start(ILocation loc, String managerID) {
 		String command = Prompt.forValue("command (ls, er, mr, ed, mv, q)");
 
 		if (command.equals("ls")) {
@@ -46,11 +46,11 @@ public class InteractiveClient {
 			Logger.log(loc.editRecord(managerID, recordID, fieldName, newValue));
 			return true;
 		}
-		
+
 		if (command.equals("mv")) {
 			String recordID = InteractiveClient.recordID();
 			String locationCode = InteractiveClient.locationCode();
-			
+
 			Logger.log("sending record transfer request for record with ID '%s' to '%s'", recordID, locationCode);
 			Logger.log(loc.transferRecord(managerID, recordID, locationCode));
 			return true;
