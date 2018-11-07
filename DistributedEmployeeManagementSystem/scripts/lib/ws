@@ -1,17 +1,18 @@
 #!/bin/bash
 
 function codegen {
-    wsgen -cp $BIN_PATH -d $BIN_PATH $WS_PKG.$JAX_NAME
+    echo "" &> /dev/null
 }
 
 function setup {
-    echo -e ""
+    echo "" &> /dev/null
 }
 
 function run_server {
     pushd $BIN_PATH >/dev/null
 
     >&2 echo "starting server:" "$@"
+    java $WS_PKG.$SERVER_CLASS "$@" >/dev/null
 
     popd >/dev/null
 }
@@ -20,6 +21,7 @@ function run_client {
     pushd $BIN_PATH >/dev/null
 
     >&2 echo "starting client:" "$@"
+    java $WS_PKG.$CLIENT_CLASS "$@"
 
     popd >/dev/null
 }

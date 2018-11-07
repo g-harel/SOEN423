@@ -1,9 +1,9 @@
 package webservice;
 
+import javax.xml.ws.Endpoint;
 import location.Logger;
 import location.Validator;
 import location.RecordServer;
-import location.Location;
 import location.AddressBook;
 
 public class Server {
@@ -20,9 +20,14 @@ public class Server {
 		}
 
 		Logger.writeTo("server-" + locationCode);
+		Logger.log("starting as '%s'", locationCode);
 
-		RecordServer rs = new RecordServer(new AddressBook(locationCode));
+		AddressBook ab = new AddressBook(locationCode);
+		RecordServer rs = new RecordServer(ab);
 
-		Location location = new Location(rs);
+		Thread t = new Thread(rs);
+		t.start();
+
+		Endpoint.publish(ab.selfAddr(), new LocationWS(rs));
 	}
 }

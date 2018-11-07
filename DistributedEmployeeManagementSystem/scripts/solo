@@ -1,0 +1,10 @@
+#!/bin/bash
+
+step "starting solo client"
+run_client "$1"
+
+function exit {
+    step "exiting"
+}
+
+trap exit EXIT

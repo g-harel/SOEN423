@@ -15,8 +15,8 @@ CLIENT_CLASS=Client
 SERVER_CLASS=Server
 
 clear
-rm -rf $BIN_PATH
-mkdir -p $BIN_PATH
+# rm -rf $BIN_PATH
+# mkdir -p $BIN_PATH
 
 function step {
     echo -e "\n >> \e[1;35m$1\e[0m\n"

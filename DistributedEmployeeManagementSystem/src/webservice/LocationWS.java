@@ -6,10 +6,8 @@ import location.Location;
 import location.RecordServer;
 
 @WebService
-public class LocationWS {
+public class LocationWS implements ILocationWS {
 	private Location location;
-
-	public LocationWS() {}
 
 	public LocationWS(RecordServer rs) {
 		this.location = new Location(rs);

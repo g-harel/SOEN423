@@ -58,6 +58,10 @@ public class AddressBook {
 		return this.self.port;
 	}
 
+	public String selfAddr() {
+		return "http://localhost:" + this.selfPort() + "/";
+	}
+
 	public int selfIndex() {
 		return this.self.index;
 	}
